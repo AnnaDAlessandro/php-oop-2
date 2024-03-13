@@ -44,8 +44,13 @@ class Play {
   }
 
   public function getPriceAfterDiscount($discountPercentage) {
-      return $this->calculateDiscount($this->price, $discountPercentage);
-  }
+    try {
+        return $this->calculateDiscount($this->price, $discountPercentage);
+    } catch (InvalidDiscountException $e) {
+        // Gestione dell'eccezione
+        return null;
+    }
+}
 }
 
 // Creazione di un prodotto
@@ -99,7 +104,11 @@ $discountedPrice = $play->getPriceAfterDiscount(10);
     <h1>Calcolo Sconto</h1>
     <p>Prodotto: <?php echo $play->name; ?></p>
     <p>Prezzo originale: $<?php echo $play->price; ?></p>
-    <p>Prezzo scontato (10% di sconto): $<?php echo $discountedPrice; ?></p>
+    <?php if ($discountedPrice !== null): ?>
+        <p>Prezzo scontato: $<?php echo $discountedPrice; ?></p>
+    <?php else: ?>
+        <p>Errore: Sconto non valido</p>
+    <?php endif; ?>
 
     </div>
   </footer>
